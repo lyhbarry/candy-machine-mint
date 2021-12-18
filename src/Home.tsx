@@ -166,20 +166,28 @@ const Home = (props: HomeProps) => {
   ]);
 
   return (
-    <main>
+    <main style={{display: 'flex',  justifyContent:'center', alignItems:'center', flexDirection:'column', height: '100vh'}}>
+      <div style={{margin: '45px', fontSize: '100px', fontWeight: 'bold' }}>
+        JELLYBABIES
+      </div>
+      <div style={{ marginBottom: '40px', fontSize: '28px', fontWeight: 'bold' }}>
+        0.25 SOL PER MINT
+      </div>
+
       {wallet && (
         <p>Wallet {shortenAddress(wallet.publicKey.toBase58() || "")}</p>
       )}
 
-      {wallet && <p>Balance: {(balance || 0).toLocaleString()} SOL</p>}
+      {/* {wallet && <p>Balance: {(balance || 0).toLocaleString()} SOL</p>} */}
 
       {wallet && <p>Total Available: {itemsAvailable}</p>}
 
       {wallet && <p>Redeemed: {itemsRedeemed}</p>}
 
-      {wallet && <p>Remaining: {itemsRemaining}</p>}
+      {/* {wallet && <p>Remaining: {itemsRemaining}</p>} */}
 
       <MintContainer>
+
         {!wallet ? (
           <ConnectButton>Connect Wallet</ConnectButton>
         ) : (
