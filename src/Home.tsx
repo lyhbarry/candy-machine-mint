@@ -1,3 +1,5 @@
+import "./Home.css"
+
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Countdown from "react-countdown";
@@ -10,6 +12,9 @@ import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { WalletDialogButton } from "@solana/wallet-adapter-material-ui";
+
+import twitterLogo from "./assets/twitter-logo.svg"
+import jellyBabiesGIF from "./assets/jellybabies.gif"
 
 import {
   CandyMachine,
@@ -167,11 +172,23 @@ const Home = (props: HomeProps) => {
 
   return (
     <main style={{display: 'flex',  justifyContent:'center', alignItems:'center', flexDirection:'column', height: '100vh'}}>
-      <div style={{margin: '45px', fontSize: '100px', fontWeight: 'bold' }}>
+
+      <div>
+        <a href="https://twitter.com/JellyBabiesNFT" target="_blank" rel="noreferrer">
+          <img src={twitterLogo} alt="twitter_logo" height="50" />
+        </a>
+      </div>
+
+      <div className="header" style={{margin: '45px', fontSize: '100px', fontWeight: 'bold' }}>
         JELLYBABIES
       </div>
-      <div style={{ marginBottom: '40px', fontSize: '28px', fontWeight: 'bold' }}>
-        0.25 SOL PER MINT
+
+      <div style={{ fontSize: '28px', fontWeight: 'bold' }}>
+        0.1 SOL PER MINT
+      </div>
+
+      <div>
+        <img style={{ margin: '40px'}} src={jellyBabiesGIF} alt="jellybabies_gif" height="250" />
       </div>
 
       {wallet && (
