@@ -22,7 +22,9 @@ import {
   getCandyMachineState,
   mintToken,
   shortenAddress,
+  mintMultipleToken,
 } from "./candy-machine";
+import { sleep } from "./utils/utilities";
 
 const ConnectButton = styled(WalletDialogButton)``;
 
@@ -88,7 +90,7 @@ const Home = (props: HomeProps) => {
     })();
   };
 
-  const onMint = async (mintAmount: number) => {
+  const onMint = async () => {
     try {
       setIsMinting(true);
       if (wallet && candyMachine?.program) {
@@ -97,7 +99,6 @@ const Home = (props: HomeProps) => {
           props.config,
           wallet.publicKey,
           props.treasury,
-          mintAmount,
         );
 
         const status = await awaitTransactionSignatureConfirmation(
@@ -153,6 +154,115 @@ const Home = (props: HomeProps) => {
       }
       setIsMinting(false);
       refreshCandyMachineState();
+    }
+  };
+
+  const onMintMultiple = async (quantity: number) => {
+    try {
+      setIsMinting(true);
+      if (wallet && candyMachine?.program) {
+        const anchorWallet = {
+          publicKey: wallet.publicKey,
+          signAllTransactions: wallet.signAllTransactions,
+          signTransaction: wallet.signTransaction,
+        } as anchor.Wallet;
+        const { candyMachine } =
+          await getCandyMachineState(
+            anchorWallet,
+            props.candyMachineId,
+            props.connection
+          );
+        if (candyMachine?.program && wallet.publicKey) {
+          const oldBalance = await props.connection.getBalance(wallet?.publicKey) / LAMPORTS_PER_SOL;
+          const futureBalance = oldBalance - (0.1 * quantity)
+
+          const signedTransactions: any = await mintMultipleToken(
+            candyMachine,
+            props.config,
+            wallet.publicKey,
+            props.treasury,
+            quantity
+          );
+
+          const promiseArray = []
+
+
+          for (let index = 0; index < signedTransactions.length; index++) {
+            const tx = signedTransactions[index];
+            promiseArray.push(awaitTransactionSignatureConfirmation(
+              tx,
+              props.txTimeout,
+              props.connection,
+              "singleGossip",
+              true
+            ))
+          }
+
+          const allTransactionsResult = await Promise.all(promiseArray)
+          let totalSuccess = 0;
+          let totalFailure = 0;
+
+          for (let index = 0; index < allTransactionsResult.length; index++) {
+            const transactionStatus = allTransactionsResult[index];
+            if (!transactionStatus?.err) {
+              totalSuccess += 1
+            } else {
+              totalFailure += 1
+            }
+          }
+
+          let newBalance = await props.connection.getBalance(wallet?.publicKey) / LAMPORTS_PER_SOL;
+
+          while(newBalance > futureBalance) {
+            await sleep(1000)
+            newBalance = await props.connection.getBalance(wallet?.publicKey) / LAMPORTS_PER_SOL;
+          }
+
+          if(totalSuccess) {
+            setAlertState({
+              open: true,
+              message: `Congratulations! ${totalSuccess} mints succeeded!`,
+              severity: "success",
+            });
+          }
+
+          if(totalFailure) {
+            setAlertState({
+              open: true,
+              message: `Some mints failed! ${totalFailure} mints failed! Check on your wallet :(`,
+              severity: "success",
+            });
+          }
+        }
+      }
+    } catch (error: any) {
+      let message = error.msg || "Minting failed! Please try again!";
+      if (!error.msg) {
+        if (error.message.indexOf("0x138")) {
+        } else if (error.message.indexOf("0x137")) {
+          message = `SOLD OUT!`;
+        } else if (error.message.indexOf("0x135")) {
+          message = `Insufficient funds to mint. Please fund your wallet.`;
+        }
+      } else {
+        if (error.code === 311) {
+          message = `SOLD OUT!`;
+          setIsSoldOut(true);
+        } else if (error.code === 312) {
+          message = `Minting period hasn't started yet.`;
+        }
+      }
+      setAlertState({
+        open: true,
+        message,
+        severity: "error",
+      });
+    } finally {
+      if (wallet?.publicKey) {
+        const balance = await props.connection.getBalance(wallet?.publicKey);
+        setBalance(balance / LAMPORTS_PER_SOL);
+      }
+      setIsMinting(false);
     }
   };
 
@@ -214,7 +324,7 @@ const Home = (props: HomeProps) => {
           <MintButton
             style={{ margin: '10px'}}
             disabled={isSoldOut || isMinting || !isActive}
-            onClick={() => onMint(1)}
+            onClick={() => onMint}
             variant="contained"
           >
             {isSoldOut ? (
@@ -236,10 +346,10 @@ const Home = (props: HomeProps) => {
           </MintButton>
 
           {/* Mint 5 */}
-          {/* <MintButton
+          <MintButton
             style={{ margin: '10px'}}
             disabled={isSoldOut || isMinting || !isActive}
-            onClick={() => onMint(5)}
+            onClick={() => onMintMultiple(5)}
             variant="contained"
           >
             {isSoldOut ? (
@@ -258,7 +368,7 @@ const Home = (props: HomeProps) => {
                 renderer={renderCounter}
               />
             )}
-          </MintButton> */}
+          </MintButton>
           </div>
         )}
       </MintContainer>
