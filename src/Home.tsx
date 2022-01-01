@@ -324,7 +324,7 @@ const Home = (props: HomeProps) => {
           <MintButton
             style={{ margin: '10px'}}
             disabled={isSoldOut || isMinting || !isActive}
-            onClick={() => onMint}
+            onClick={onMint}
             variant="contained"
           >
             {isSoldOut ? (
