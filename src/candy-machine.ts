@@ -240,11 +240,12 @@ const getTokenWallet = async (
   )[0];
 };
 
-export const mintOneToken = async (
+export const mintToken = async (
   candyMachine: CandyMachine,
   config: anchor.web3.PublicKey, // feels like this should be part of candyMachine?
   payer: anchor.web3.PublicKey,
   treasury: anchor.web3.PublicKey,
+  mintAmount: number,
 ): Promise<string> => {
   const mint = anchor.web3.Keypair.generate();
   const token = await getTokenWallet(payer, mint.publicKey);
@@ -301,7 +302,7 @@ export const mintOneToken = async (
         token,
         payer,
         [],
-        1
+        mintAmount
       ),
     ],
   });

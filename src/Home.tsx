@@ -20,7 +20,7 @@ import {
   CandyMachine,
   awaitTransactionSignatureConfirmation,
   getCandyMachineState,
-  mintOneToken,
+  mintToken,
   shortenAddress,
 } from "./candy-machine";
 
@@ -88,15 +88,16 @@ const Home = (props: HomeProps) => {
     })();
   };
 
-  const onMint = async () => {
+  const onMint = async (mintAmount: number) => {
     try {
       setIsMinting(true);
       if (wallet && candyMachine?.program) {
-        const mintTxId = await mintOneToken(
+        const mintTxId = await mintToken(
           candyMachine,
           props.config,
           wallet.publicKey,
-          props.treasury
+          props.treasury,
+          mintAmount,
         );
 
         const status = await awaitTransactionSignatureConfirmation(
@@ -205,13 +206,15 @@ const Home = (props: HomeProps) => {
 
 
       <MintContainer>
-
         {!wallet ? (
           <ConnectButton>Connect Wallet</ConnectButton>
         ) : (
+          <div>
+          {/* Mint 1 */}
           <MintButton
+            style={{ margin: '10px'}}
             disabled={isSoldOut || isMinting || !isActive}
-            onClick={onMint}
+            onClick={() => onMint(1)}
             variant="contained"
           >
             {isSoldOut ? (
@@ -220,7 +223,7 @@ const Home = (props: HomeProps) => {
               isMinting ? (
                 <CircularProgress />
               ) : (
-                "MINT"
+                "MINT 1"
               )
             ) : (
               <Countdown
@@ -231,6 +234,32 @@ const Home = (props: HomeProps) => {
               />
             )}
           </MintButton>
+
+          {/* Mint 5 */}
+          <MintButton
+            style={{ margin: '10px'}}
+            disabled={isSoldOut || isMinting || !isActive}
+            onClick={() => onMint(5)}
+            variant="contained"
+          >
+            {isSoldOut ? (
+              "SOLD OUT"
+            ) : isActive ? (
+              isMinting ? (
+                <CircularProgress />
+              ) : (
+                "MINT 5"
+              )
+            ) : (
+              <Countdown
+                date={startDate}
+                onMount={({ completed }) => completed && setIsActive(true)}
+                onComplete={() => setIsActive(true)}
+                renderer={renderCounter}
+              />
+            )}
+          </MintButton>
+          </div>
         )}
       </MintContainer>
 
