@@ -236,7 +236,7 @@ const Home = (props: HomeProps) => {
           </MintButton>
 
           {/* Mint 5 */}
-          <MintButton
+          {/* <MintButton
             style={{ margin: '10px'}}
             disabled={isSoldOut || isMinting || !isActive}
             onClick={() => onMint(5)}
@@ -258,7 +258,7 @@ const Home = (props: HomeProps) => {
                 renderer={renderCounter}
               />
             )}
-          </MintButton>
+          </MintButton> */}
           </div>
         )}
       </MintContainer>
