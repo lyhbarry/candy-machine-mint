@@ -295,7 +295,7 @@ const Home = (props: HomeProps) => {
       </div>
 
       <div style={{ fontSize: '28px', fontWeight: 'bold' }}>
-        0.1 SOL PER MINT
+        PHASE 1: 0.1 SOL PER MINT
       </div>
 
       <div>
@@ -308,12 +308,18 @@ const Home = (props: HomeProps) => {
 
       {/* {wallet && <p>Balance: {(balance || 0).toLocaleString()} SOL</p>} */}
 
-      {wallet && <p>Total Available: {itemsAvailable}</p>}
+      {/* {wallet && <p>Total Available: {itemsAvailable}</p>}
 
       {wallet && <p>Remaining: {itemsRemaining}</p>}
 
-      {wallet && <p>Redeemed: {itemsRedeemed}</p>}
+      {wallet && <p>Redeemed: {itemsRedeemed}</p>} */}
 
+      {/* Phase 1 Display info */}
+      {wallet && <p>Phase 1 Supply: 1,111</p>}
+
+      {wallet && <p>Phase 1 Redeemed: {itemsRedeemed}</p>}
+
+      {wallet && <p>Phase 1 Remaining: {1111 - itemsRedeemed}</p>}
 
       <MintContainer>
         {!wallet ? (
