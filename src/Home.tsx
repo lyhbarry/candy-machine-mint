@@ -295,7 +295,7 @@ const Home = (props: HomeProps) => {
       </div>
 
       <div style={{ fontSize: '28px', fontWeight: 'bold' }}>
-        PHASE 1: 0.1 SOL PER MINT
+        PHASE 2: 0.2 SOL PER MINT
       </div>
 
       <div>
@@ -315,11 +315,11 @@ const Home = (props: HomeProps) => {
       {wallet && <p>Redeemed: {itemsRedeemed}</p>} */}
 
       {/* Phase 1 Display info */}
-      {wallet && <p>Phase 1 Supply: 1,111</p>}
+      {wallet && <p>Phase 2 Supply: 1,111</p>}
 
-      {wallet && <p>Phase 1 Redeemed: {itemsRedeemed}</p>}
+      {wallet && <p>Phase 2 Redeemed: {1111 - itemsRedeemed + 50}</p>}
 
-      {wallet && <p>Phase 1 Remaining: {1111 - itemsRedeemed}</p>}
+      {wallet && <p>Phase 2 Remaining: {2222 - itemsRedeemed}</p>}
 
       <MintContainer>
         {!wallet ? (
