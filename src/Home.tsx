@@ -317,7 +317,7 @@ const Home = (props: HomeProps) => {
       {/* Phase 1 Display info */}
       {wallet && <p>Total Redeemed: {itemsRedeemed}</p>}
 
-      {wallet && <p>Phase 3 Remaining: {3333 - itemsRedeemed}</p>}
+      {wallet && <p>Phase 3 Remaining: {3000 - itemsRedeemed}</p>}
 
       <MintContainer>
         {!wallet ? (
