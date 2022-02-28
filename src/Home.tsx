@@ -295,7 +295,7 @@ const Home = (props: HomeProps) => {
       </div>
 
       <div style={{ fontSize: '28px', fontWeight: 'bold' }}>
-        PHASE 3 (Final Phase): 0.1 SOL PER MINT
+        PHASE 3 (Final Phase): 0.2 SOL PER MINT
       </div>
 
       <div>
